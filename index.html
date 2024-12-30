@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WTF is Fun?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            color: white;
+            transition: background 0.5s;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .fun-button {
+            background: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .fun-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .fun-box {
+            background: rgba(255,255,255,0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .fun-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fun-text {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .emoji {
+            font-size: 3rem;
+            margin: 1rem;
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .emoji:hover {
+            animation-play-state: running;
+        }
+
+        .fun-meter {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .fun-meter-fill {
+            width: 0%;
+            height: 100%;
+            background: #FFD93D;
+            transition: width 0.3s;
+        }
+
+        .achievement {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: #FFD93D;
+            padding: 1rem;
+            border-radius: 10px;
+            transition: right 0.5s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .achievement.show {
+            right: 20px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .mood-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .mood {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .mood:hover {
+            transform: scale(1.2);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode {
+            background: linear-gradient(135deg, #2C3E50, #3498DB);
+        }
+
+        .fun-fact {
+            background: rgba(255,255,255,0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .fun-button {
+                font-size: 1.2rem;
+                padding: 0.8rem 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container">
+        <h1 onclick="makeItRain()">WTF is Fun? 🤔</h1>
+        
+        <div class="button-container">
+            <button class="fun-button" onclick="showRandomFun()">Click for Fun!</button>
+            <button class="fun-button" style="background: #FFD93D; color: white;" onclick="toggleParty()">PARTY MODE!</button>
+            <button class="fun-button" style="background: #FF69B4;" onclick="tellJoke()">Random Joke</button>
+            <button class="fun-button" style="background: #98FB98;" onclick="showFunFact()">Fun Fact</button>
+        </div>
+
+        <div class="mood-selector">
+            <span class="mood" onclick="setMood('😊')">😊</span>
+            <span class="mood" onclick="setMood('🤪')">🤪</span>
+            <span class="mood" onclick="setMood('🎮')">🎮</span>
+            <span class="mood" onclick="setMood('🎨')">🎨</span>
+        </div>
+
+        <div class="fun-meter">
+            <div class="fun-meter-fill" id="funMeter"></div>
+        </div>
+
+        <div class="fun-box" id="funBox">
+            <p class="fun-text" id="funText"></p>
+            <div id="emojiContainer"></div>
+        </div>
+
+        <div id="funFact" class="fun-fact" style="display: none;"></div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        Achievement Unlocked: Fun Master! 🏆
+    </div>
+
+    <script>
+        const funDefinitions = [
+            "Fun is when you forget what time it is! ⌚",
+            "Fun is eating dessert first! 🍰",
+            "Fun is dancing like nobody's watching! 💃",
+            "Fun is making silly faces in the mirror! 🤪",
+            "Fun is jumping in puddles with new shoes! 👟",
+            "Fun is sending memes to your boss! 📱",
+            "Fun is having breakfast for dinner! 🍳",
+            "Fun is speaking in a fake accent all day! 🎭",
+            "Fun is building a pillow fort at age 30! 🏰",
+            "Fun is calling in 'good' instead of calling in sick! 🌞",
+            "Fun is starting a dance party in an elevator! 🕺",
+            "Fun is wearing mismatched socks on purpose! 🧦",
+            "Fun is having a conversation entirely in GIFs! 📱",
+            "Fun is naming your houseplants after celebrities! 🌿",
+            "Fun is having a karaoke session in your car! 🎤"
+        ];
+
+        const jokes = [
+            "Why don't scientists trust atoms? Because they make up everything! 😄",
+            "What did the grape say when it got stepped on? Nothing, it just let out a little wine! 🍷",
+            "Why don't eggs tell jokes? They'd crack up! 🥚",
+            "What do you call a bear with no teeth? A gummy bear! 🐻",
+            "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾"
+        ];
+
+        const funFacts = [
+            "Laughing for one minute burns the same calories as 10 minutes of rowing! 😆",
+            "The first oranges weren't orange - they were green! 🍊",
+            "Honey never spoils. Archaeologists found 3000-year-old honey in Egypt! 🍯",
+            "Cows have best friends and get stressed when separated! 🐮",
+            "The average person spends 6 months of their lifetime waiting for red lights! 🚦"
+        ];
+
+        const emojis = ["🎉", "🎨", "🎮", "🎪", "🎢", "🎸", "🎭", "🎪", "🎯", "🎲"];
+        let partyMode = false;
+        let partyInterval;
+        let funLevel = 0;
+
+        function showRandomFun() {
+            const funBox = document.getElementById('funBox');
+            const funText = document.getElementById('funText');
+            const emojiContainer = document.getElementById('emojiContainer');
+            
+            funBox.classList.add('visible');
+            const randomIndex = Math.floor(Math.random() * funDefinitions.length);
+            funText.textContent = funDefinitions[randomIndex];
+            
+            emojiContainer.innerHTML = '';
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            emojiContainer.innerHTML = `<span class="emoji">${randomEmoji}</span>`;
+            
+            increaseFunMeter();
+        }
+
+        function toggleParty() {
+            partyMode = !partyMode;
+            const body = document.body;
+            
+            if (partyMode) {
+                partyInterval = setInterval(() => {
+                    body.style.background = `linear-gradient(135deg, 
+                        hsl(${Math.random() * 360}, 70%, 60%), 
+                        hsl(${Math.random() * 360}, 70%, 60%))`;
+                }, 500);
+                showRandomFun();
+                createConfetti();
+            } else {
+                clearInterval(partyInterval);
+                body.style.background = body.classList.contains('dark-mode') 
+                    ? 'linear-gradient(135deg, #2C3E50, #3498DB)'
+                    : 'linear-gradient(135deg, #FF6B6B, #4ECDC4)';
+            }
+        }
+
+        function increaseFunMeter() {
+            funLevel = Math.min(100, funLevel + 10);
+            document.getElementById('funMeter').style.width = `${funLevel}%`;
+            
+            if (funLevel === 100) {
+                showAchievement();
+            }
+        }
+
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            achievement.classList.add('show');
+            setTimeout(() => {
+                achievement.classList.remove('show');
+            }, 3000);
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.opacity = Math.random();
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        function setMood(mood) {
+            document.querySelector('h1').innerHTML = `WTF is Fun? ${mood}`;
+            showRandomFun();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            if (partyMode) {
+                toggleParty();
+            }
+        }
+
+        function makeItRain() {
+            createConfetti();
+            showRandomFun();
+        }
+
+        function tellJoke() {
+            const funBox = document.getElementById('funBox');
+            const funText = document.getElementById('funText');
+            
+            funBox.classList.add('visible');
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            funText.textContent = randomJoke;
+            
+            increaseFunMeter();
+        }
+
+        function showFunFact() {
+            const funFact = document.getElementById('funFact');
+            const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+            funFact.textContent = randomFact;
+            funFact.style.display = 'block';
+            
+            setTimeout(() => {
+                funFact.style.display = 'none';
+            }, 5000);
+            
+            increaseFunMeter();
+        }
+    </script>
+</body>
+</html>
